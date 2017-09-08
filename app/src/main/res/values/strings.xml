@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">KegstatusClient</string>
+    <string name="keg_status">Get Keg Status</string>
+</resources>
