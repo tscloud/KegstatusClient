@@ -3,8 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/top_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:gauge="http://schemas.android.com/apk/res-auto"
     tools:context="net.tscloud.kegstatusclient.MainActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textViewKegStatus"
+        android:orientation="horizontal">
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:id="@+id/graph1"
+            android:visibility="visible" />
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:id="@+id/graph2"
+            android:visibility="visible" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textViewKegStatus"
@@ -16,12 +41,12 @@
         android:gravity="center"
         tools:layout_editor_absoluteX="83dp"
         tools:layout_editor_absoluteY="314dp"
-        android:layout_marginBottom="75dp"
+        android:layout_marginBottom="18dp"
         android:layout_above="@+id/btnGetKegStatus"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:id="@+id/btnGetKegStatus"
@@ -30,7 +55,7 @@
         android:text="@string/keg_status"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="140dp"
+        android:layout_marginBottom="18dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="81dp" />
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

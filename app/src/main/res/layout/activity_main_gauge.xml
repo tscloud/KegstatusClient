@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:gauge="http://schemas.android.com/apk/res-auto"
+    tools:context="net.tscloud.kegstatusclient.MainActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/search_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/textViewKegStatus"
+        android:orientation="vertical">
+
+        <com.ntt.customgaugeview.library.GaugeView
+            android:id="@+id/gauge_view_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.50"
+            android:layout_margin="16dp"
+            gauge:divisions="7"
+            gauge:subdivisions="1"
+            gauge:rangeValues="@array/temperatureRangeValues"
+            gauge:scaleEndValue="5000"
+            gauge:showInnerRim="false"
+            gauge:showNeedle="true"
+            gauge:showOuterBorder="false"
+            gauge:showOuterRim="true"
+            gauge:showOuterShadow="false"
+            gauge:showRangeText="true"
+            gauge:showRanges="true"
+            gauge:showScale="true"
+            gauge:textUnitColor="@color/colorPrimaryDark"
+            gauge:textUnit="Temperature (F)"
+            gauge:textUnitSize="0.06"
+            gauge:textValueSize="0.15" />
+
+        <com.ntt.customgaugeview.library.GaugeView
+            android:id="@+id/gauge_view_hum"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.50"
+            android:layout_margin="16dp"
+            gauge:divisions="5"
+            gauge:subdivisions="1"
+            gauge:rangeValues="@array/humidityRangeValues"
+            gauge:scaleEndValue="5000"
+            gauge:showInnerRim="false"
+            gauge:showNeedle="true"
+            gauge:showOuterBorder="false"
+            gauge:showOuterRim="true"
+            gauge:showOuterShadow="false"
+            gauge:showRangeText="true"
+            gauge:showRanges="true"
+            gauge:showScale="true"
+            gauge:textUnitColor="@color/colorPrimaryDark"
+            gauge:textUnit="Humidity (%rH)"
+            gauge:textUnitSize="0.06"
+            gauge:textValueSize="0.15" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewKegStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/keg_status"
+        android:textSize="18sp"
+        android:gravity="center"
+        tools:layout_editor_absoluteX="83dp"
+        tools:layout_editor_absoluteY="314dp"
+        android:layout_marginBottom="18dp"
+        android:layout_above="@+id/btnGetKegStatus"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/btnGetKegStatus"
+        android:layout_width="105dp"
+        android:layout_height="53dp"
+        android:text="@string/keg_status"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="140dp"
+        android:layout_marginBottom="18dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

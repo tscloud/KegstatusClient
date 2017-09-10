@@ -27,6 +27,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'org.twitter4j:twitter4j-core:4.0.4'
     compile 'org.twitter4j:twitter4j-stream:4.0.4'
+    compile 'com.github.thuat26:CustomGaugeView:1.0'
+    compile 'com.jjoe64:graphview:4.2.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-v4:26.+'
     testCompile 'junit:junit:4.12'
 }

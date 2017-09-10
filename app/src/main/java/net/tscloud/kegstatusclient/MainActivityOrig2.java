@@ -1,35 +1,31 @@
 package net.tscloud.kegstatusclient;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import twitter4j.FilterQuery;
-import twitter4j.StallWarning;
-import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
-import twitter4j.StatusListener;
+import java.util.Date;
+import java.util.List;
+
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.TwitterStream;
-import twitter4j.TwitterStreamFactory;
+import twitter4j.User;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 
-public class MainActivityOrig extends AppCompatActivity {
+public class MainActivityOrig2 extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     // ConfigurationBuilder used by twitter routines
     private ConfigurationBuilder mCb;
     private Configuration mConfig;
     Twitter mTwitter;
-    TwitterStream mTwitterStream;
 
     // should not make this member var
     private TextView mTextViewKegStatus;
@@ -52,7 +48,6 @@ public class MainActivityOrig extends AppCompatActivity {
 
         mConfig = mCb.build();
         mTwitter = new TwitterFactory(mConfig).getInstance();
-        mTwitterStream = new TwitterStreamFactory(mConfig).getInstance();
 
         final Button btnGetKegStatus = (Button)findViewById(R.id.btnGetKegStatus);
         mTextViewKegStatus = (TextView)findViewById(R.id.textViewKegStatus);
@@ -67,7 +62,7 @@ public class MainActivityOrig extends AppCompatActivity {
     }
 
     private void postRequest(String aStatusChange) {
-        sendTweet task = new sendTweet(aStatusChange);
+        SendTweet task = new SendTweet(aStatusChange);
         task.execute();
     }
 
@@ -77,57 +72,16 @@ public class MainActivityOrig extends AppCompatActivity {
     }
 
     private void receiveReply() {
-        StatusListener listener = new StatusListener() {
-
-            @Override
-            public void onStatus(Status status) {
-                Log.d(TAG, "@" + status.getUser().getScreenName() + " - " + status.getText());
-                // set the TextView
-                setStatusText(status.getText());
-                mTwitterStream.cleanUp();
-            }
-
-            @Override
-            public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
-                Log.d(TAG, "Got a status deletion notice id:" + statusDeletionNotice.getStatusId());
-            }
-
-            @Override
-            public void onTrackLimitationNotice(int numberOfLimitedStatuses) {
-                Log.d(TAG, "Got track limitation notice:" + numberOfLimitedStatuses);
-            }
-
-            @Override
-            public void onScrubGeo(long userId, long upToStatusId) {
-                Log.d(TAG, "Got scrub_geo event userId:" + userId + " upToStatusId:" + upToStatusId);
-            }
-
-            @Override
-            public void onStallWarning(StallWarning warning) {
-                Log.d(TAG, "Got StallWarning: " + warning.getMessage());
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                ex.printStackTrace();
-            }
-        };
-
-        FilterQuery fq = new FilterQuery();
-        String keywords[] = {"Kegstatus --"};
-
-        fq.track(keywords);
-
-        mTwitterStream.addListener(listener);
-        mTwitterStream.filter(fq);
+        ReadHomeTimeLine task = new ReadHomeTimeLine();
+        task.execute();
     }
 
-    private class sendTweet extends AsyncTask<Void, Void, Void> {
+    private class SendTweet extends AsyncTask<Void, Void, Void> {
         private static final String TAG = "SendTweet";
 
         String mStatusChange;
 
-        sendTweet(String aStatusChange) {
+        SendTweet(String aStatusChange) {
             mStatusChange = aStatusChange;
         }
 
@@ -160,6 +114,78 @@ public class MainActivityOrig extends AppCompatActivity {
 
             // try and read temp/hum tweet
             receiveReply();
+        }
+    }
+
+    private class ReadHomeTimeLine extends AsyncTask<Void, Void, String> {
+        private static final String TAG = "ReadHomeTimeLine";
+
+        ReadHomeTimeLine() {}
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String initialInd = "Get Keg Status";
+            String noRespInd = "Server did not respond";
+            String resultInd = "Kegstatus --";
+
+            String reply = initialInd;
+
+            try {
+                // gets Twitter instance with default credentials
+                User user = mTwitter.verifyCredentials();
+                // try max 3 times to get the result we're interested in
+                for (int i=0; i<3; i++) {
+                    // get home timeline
+                    List<twitter4j.Status> statuses = mTwitter.getHomeTimeline();
+                    Log.d(TAG, "Showing @" + user.getScreenName() + "'s home timeline.");
+                    for (twitter4j.Status status : statuses) {
+                        if (status.getText().startsWith(resultInd)) {
+                            Log.d(TAG, "@" + status.getUser().getScreenName() + " - " + status.getText());
+                            reply = status.getText();
+                            // delete the tweet - don't want to keep these in out home timeline
+                            mTwitter.destroyStatus(status.getId());
+                            break;
+                        }
+                    }
+
+                    if (reply.contains(resultInd)) {
+                        // we got what we're interested on -> get out
+                        reply = reply.substring(resultInd.length());
+                        break;
+                    }
+                    else {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            Log.d(TAG, "Huh? Thread.sleep prob");
+                        }
+                    }
+                }
+
+                if (reply.equals(initialInd)) {
+                    reply = noRespInd;
+                }
+
+            } catch (TwitterException te) {
+                te.printStackTrace();
+                Log.d(TAG, "Failed to get timeline: " + te.getMessage());
+                reply = "TwitterException received";
+            }
+
+            return reply;
+        }
+
+        @Override
+        protected void onPostExecute(String aResultStatus) {
+            super.onPostExecute(aResultStatus);
+
+            // update TextView
+            setStatusText(aResultStatus);
         }
     }
 }
