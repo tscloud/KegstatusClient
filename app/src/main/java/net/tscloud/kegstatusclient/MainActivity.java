@@ -1,23 +1,15 @@
 package net.tscloud.kegstatusclient;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
 import com.ntt.customgaugeview.library.GaugeView;
 
 import twitter4j.FilterQuery;
@@ -89,9 +81,10 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         //TEST
-        final GaugeView gaugeViewTemp = (GaugeView) findViewById(R.id.gauge_view_temp);
-        final GaugeView gaugeViewHum = (GaugeView) findViewById(R.id.gauge_view_hum);
+        mGaugeViewTemp = (GaugeView) findViewById(R.id.gauge_view_temp);
+        mGaugeViewHumidity = (GaugeView) findViewById(R.id.gauge_view_hum);
 
+        /*
         gaugeViewTemp.setShowRangeValues(true);
         gaugeViewTemp.setTargetValue(0);
         gaugeViewHum.setShowRangeValues(true);
@@ -99,6 +92,13 @@ public class MainActivity extends AppCompatActivity implements
 
         gaugeViewTemp.setTargetValue(30);
         gaugeViewHum.setTargetValue(20);
+        */
+
+        // I think this wants to be done here as apposed to a data set time
+        mGaugeViewTemp.setShowRangeValues(true);
+        mGaugeViewTemp.setTargetValue(30);
+        mGaugeViewHumidity.setShowRangeValues(true);
+        mGaugeViewHumidity.setTargetValue(0);
     }
 
     @Override
@@ -145,9 +145,20 @@ public class MainActivity extends AppCompatActivity implements
         //parse out values
         final String TEMP_IND = "Temp: ";
         final String HUM_IND = "Humidity: ";
+        final int dataLen = 5;
+        final int posTemp = TEMP_IND.length() + 1;
+        final int posHum = aText.indexOf(HUM_IND) + HUM_IND.length();
 
-        String tempOut= aText.substring(TEMP_IND.length() + 1, TEMP_IND.length() + 6);
+        String tempOut= aText.substring(posTemp, posTemp + dataLen);
+        String humidityOut= aText.substring(posHum, posHum + dataLen);
         Log.d(TAG, "1)--" + tempOut + "--");
+        Log.d(TAG, "2)--" + humidityOut + "--");
+
+        // Set Gauges
+        mGaugeViewTemp.setShowRangeValues(true);
+        mGaugeViewTemp.setTargetValue(Float.parseFloat(tempOut));
+        mGaugeViewHumidity.setShowRangeValues(true);
+        mGaugeViewHumidity.setTargetValue(Float.parseFloat(humidityOut));
     }
 
     private void receiveReply() {
@@ -163,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements
                 String noRespInd = "Server did not respond";
                 String resultInd = "Kegstatus --";
 
-                String reply = null;
+                String reply;
 
                 if (status.getText().startsWith(resultInd)) {
                     // set reply & trim off the indicator
@@ -172,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements
                     try {
                         // delete the tweet - don't want to keep these in our home timeline
                         mTwitter.destroyStatus(status.getId());
+                        Log.d(TAG, "Successfully deleted tweet");
                     } catch (TwitterException te) {
                         te.printStackTrace();
                         Log.d(TAG, "Failed to delete tweet: " + te.getMessage());
