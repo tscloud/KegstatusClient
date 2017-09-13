@@ -12,6 +12,13 @@ import android.widget.TextView;
 
 import com.ntt.customgaugeview.library.GaugeView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+
 import twitter4j.FilterQuery;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -76,7 +83,9 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 //postRequest(textViewKegStatus.getText().toString());
-                postRequest(CMD_STRING);
+                //postRequest(CMD_STRING);
+                ReadHttpUrl task = new ReadHttpUrl("https://www.dropbox.com/s/bppsvfelpembf7v/test.txt?dl=0");
+                task.execute();
             }
         });
 
@@ -285,6 +294,45 @@ public class MainActivity extends AppCompatActivity implements
 
             mTwitterStream.cleanUp();
             mTwitterStream.shutdown();
+
+            return null;
+        }
+    }
+
+    private class ReadHttpUrl extends AsyncTask<Void, Void, Void> {
+        private static final String TAG = "ReadHttpUrl";
+
+        String mUrl;
+
+        public ReadHttpUrl(String aUrl) {
+            mUrl = aUrl;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.d(TAG, "Read provided URL as bunch of Strings");
+
+            try{
+                URL url = new URL(mUrl);
+                URLConnection conn = url.openConnection();
+                conn.setDoOutput(true);
+                conn.connect();
+
+                InputStream is = conn.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+                BufferedReader br = new BufferedReader(isr);
+                String line;
+
+                try {
+                    while ((line = br.readLine()) != null) {
+                        Log.d(TAG, line);
+                    }
+                } finally {
+                    br.close();
+                }
+            }catch (IOException e){
+                e.printStackTrace();
+            }
 
             return null;
         }
