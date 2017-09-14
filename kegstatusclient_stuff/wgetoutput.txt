@@ -1,0 +1,55 @@
+C:\tc\download\wgot>wget https://dl.dropboxusercontent.com/s/bppsvfelpembf7v/test.txt
+--14:59:02--  https://dl.dropboxusercontent.com/s/bppsvfelpembf7v/test.txt
+           => `test.txt.1'
+Resolving dl.dropboxusercontent.com... done.
+Connecting to dl.dropboxusercontent.com[162.125.4.6]:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 351 [text/plain]
+
+100%[====================================>] 351          342.77K/s    ETA 00:00
+
+14:59:02 (342.77 KB/s) - `test.txt.1' saved [351/351]
+
+
+
+C:\tc\download\wgot>wget https://www.dropbox.com/s/bppsvfelpembf7v/test.txt
+--14:59:47--  https://www.dropbox.com/s/bppsvfelpembf7v/test.txt
+           => `test.txt.2'
+Resolving www.dropbox.com... done.
+Connecting to www.dropbox.com[162.125.4.1]:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://dl.dropboxusercontent.com/content_link/0iyvpY2ixwxuZZpEIUWvgL8orqTB0fUB7e38bfW2SDzC5RUvopCoOfuNRNNiFOti/file [foll
+owing]
+--14:59:48--  https://dl.dropboxusercontent.com/content_link/0iyvpY2ixwxuZZpEIUWvgL8orqTB0fUB7e38bfW2SDzC5RUvopCoOfuNRNNiFOti/file
+           => `file'
+Resolving dl.dropboxusercontent.com... done.
+Connecting to dl.dropboxusercontent.com[162.125.4.6]:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 351 [text/plain]
+
+100%[====================================>] 351          342.77K/s    ETA 00:00
+
+14:59:49 (342.77 KB/s) - `file' saved [351/351]
+
+
+
+C:\tc\download\wgot>wget https://www.dropbox.com/s/bppsvfelpembf7v/test.txt?dl=1
+--15:01:36--  https://www.dropbox.com/s/bppsvfelpembf7v/test.txt?dl=1
+           => `test.txt@dl=1'
+Resolving www.dropbox.com... done.
+Connecting to www.dropbox.com[162.125.4.1]:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://dl.dropboxusercontent.com/content_link/u9YsNDoXgA7WHKXOs0WP0uoAXpScIdxhSDQIHjlIcbEmR1c8FWcsbNLYyZ2Ph649/file?dl=1
+[following]
+--15:01:36--  https://dl.dropboxusercontent.com/content_link/u9YsNDoXgA7WHKXOs0WP0uoAXpScIdxhSDQIHjlIcbEmR1c8FWcsbNLYyZ2Ph649/file?d
+l=1
+           => `file@dl=1'
+Resolving dl.dropboxusercontent.com... done.
+Connecting to dl.dropboxusercontent.com[162.125.4.6]:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 351 [application/binary]
+
+100%[====================================>] 351          342.77K/s    ETA 00:00
+
+15:01:37 (342.77 KB/s) - `file@dl=1' saved [351/351]
+
