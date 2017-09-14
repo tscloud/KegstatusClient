@@ -8,6 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +46,7 @@ public class MainActivityOrig2 extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // can only do this once
+        /* TEST
         mCb = new ConfigurationBuilder();
         mCb.setDebugEnabled(true);
         mCb.setOAuthConsumerKey("21LTjHWieVX1ZZh9F2Ihavoff");
@@ -48,6 +56,7 @@ public class MainActivityOrig2 extends AppCompatActivity {
 
         mConfig = mCb.build();
         mTwitter = new TwitterFactory(mConfig).getInstance();
+        */
 
         final Button btnGetKegStatus = (Button)findViewById(R.id.btnGetKegStatus);
         mTextViewKegStatus = (TextView)findViewById(R.id.textViewKegStatus);
@@ -62,7 +71,9 @@ public class MainActivityOrig2 extends AppCompatActivity {
     }
 
     private void postRequest(String aStatusChange) {
-        SendTweet task = new SendTweet(aStatusChange);
+        //SendTweet task = new SendTweet(aStatusChange);
+        //task.execute();
+        ReadHttpUrl task = new ReadHttpUrl("https://www.dropbox.com/s/bppsvfelpembf7v/test.txt");
         task.execute();
     }
 
@@ -186,6 +197,104 @@ public class MainActivityOrig2 extends AppCompatActivity {
 
             // update TextView
             setStatusText(aResultStatus);
+        }
+    }
+
+    private class ReadHttpUrl extends AsyncTask<Void, Void, Void> {
+        private static final String TAG = "ReadHttpUrl";
+
+        String mUrl;
+
+        public ReadHttpUrl(String aUrl) {
+            mUrl = aUrl;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.d(TAG, "Read provided URL as bunch of Strings");
+
+            /*
+            try{
+                URL url = new URL(mUrl);
+                //First open the connection
+                HttpURLConnection conn=(HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(60000); // timing out in a minute
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                //t=(TextView)findViewById(R.id.TextView1); // ideally do this in onCreate()
+                String str;
+                while ((str = in.readLine()) != null) {
+                    Log.d(TAG, str);
+                }
+                in.close();
+            } catch (Exception e) {
+                Log.d("MyTag",e.toString());
+            }
+            */
+            try {
+
+                String url = mUrl;
+
+                URL obj = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+                conn.setReadTimeout(5000);
+                conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+                conn.addRequestProperty("User-Agent", "Mozilla");
+                conn.addRequestProperty("Referer", "google.com");
+
+                System.out.println("Request URL ... " + url);
+
+                boolean redirect = false;
+
+                // normally, 3xx is redirect
+                int status = conn.getResponseCode();
+                if (status != HttpURLConnection.HTTP_OK) {
+                    if (status == HttpURLConnection.HTTP_MOVED_TEMP
+                            || status == HttpURLConnection.HTTP_MOVED_PERM
+                            || status == HttpURLConnection.HTTP_SEE_OTHER)
+                        redirect = true;
+                }
+
+                System.out.println("Response Code ... " + status);
+
+                if (redirect) {
+
+                    // get redirect url from "location" header field
+                    String newUrl = conn.getHeaderField("Location");
+
+                    // get the cookie if need, for login
+                    String cookies = conn.getHeaderField("Set-Cookie");
+
+                    // open the new connnection again
+                    conn = (HttpURLConnection) new URL(newUrl).openConnection();
+                    conn.setRequestProperty("Cookie", cookies);
+                    conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+                    conn.addRequestProperty("User-Agent", "Mozilla");
+                    conn.addRequestProperty("Referer", "google.com");
+
+                    System.out.println("Redirect to URL : " + newUrl);
+
+                }
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                StringBuffer html = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    html.append(inputLine);
+                }
+                in.close();
+
+                System.out.println("URL Content... \n" + html.toString());
+                System.out.println("Done");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
         }
     }
 }
