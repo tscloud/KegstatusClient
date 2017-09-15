@@ -73,7 +73,9 @@ public class MainActivityOrig2 extends AppCompatActivity {
     private void postRequest(String aStatusChange) {
         //SendTweet task = new SendTweet(aStatusChange);
         //task.execute();
-        ReadHttpUrl task = new ReadHttpUrl("https://www.dropbox.com/s/bppsvfelpembf7v/test.txt");
+        String theUrl = "https://dl.dropboxusercontent.com/s/bppsvfelpembf7v/test.txt";
+        //String theUrl = "https://www.dropbox.com/s/bppsvfelpembf7v/test.txt";
+        ReadHttpUrl task = new ReadHttpUrl(theUrl);
         task.execute();
     }
 
@@ -228,7 +230,7 @@ public class MainActivityOrig2 extends AppCompatActivity {
                 }
                 in.close();
             } catch (Exception e) {
-                Log.d("MyTag",e.toString());
+                Log.d(TAG, e.toString());
             }
             /*
             try {
