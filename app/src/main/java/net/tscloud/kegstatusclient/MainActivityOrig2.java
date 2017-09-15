@@ -213,7 +213,6 @@ public class MainActivityOrig2 extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             Log.d(TAG, "Read provided URL as bunch of Strings");
 
-            /*
             try{
                 URL url = new URL(mUrl);
                 //First open the connection
@@ -231,7 +230,7 @@ public class MainActivityOrig2 extends AppCompatActivity {
             } catch (Exception e) {
                 Log.d("MyTag",e.toString());
             }
-            */
+            /*
             try {
 
                 String url = mUrl;
@@ -293,6 +292,7 @@ public class MainActivityOrig2 extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            */
 
             return null;
         }
