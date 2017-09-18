@@ -90,16 +90,6 @@ public class MainActivity extends AppCompatActivity implements
         mGaugeViewTemp = (GaugeView) findViewById(R.id.gauge_view_temp);
         mGaugeViewHumidity = (GaugeView) findViewById(R.id.gauge_view_hum);
 
-        /*
-        gaugeViewTemp.setShowRangeValues(true);
-        gaugeViewTemp.setTargetValue(0);
-        gaugeViewHum.setShowRangeValues(true);
-        gaugeViewHum.setTargetValue(0);
-
-        gaugeViewTemp.setTargetValue(30);
-        gaugeViewHum.setTargetValue(20);
-        */
-
         // I think this wants to be done here as apposed to a data set time
         mGaugeViewTemp.setShowRangeValues(true);
         mGaugeViewTemp.setTargetValue(30);
@@ -121,10 +111,11 @@ public class MainActivity extends AppCompatActivity implements
         super.onStop();
 
         Log.d(TAG, "onStop() called -- cleanup TwitterStream");
-
+        // kill twitter stream - no longer read tweets
         new KillTwitterStream().execute();
     }
 
+    // Needed from Fragment interface
     @Override
     public void onFragmentInteraction(Uri uri) {
         Log.d(TAG, "onFragmentInteraction() called");
@@ -144,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements
         mTextViewKegStatus.setText(aText);
     }
 
-    // Need a method to set the TextView
+    // Need a method to set the Gauges
     private void setGauges(final String aText) {
         Log.d(TAG, "setGauges() called");
 
@@ -254,11 +245,6 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
         protected Void doInBackground(Void... voids) {
             twitter4j.Status status = null;
 
@@ -274,11 +260,6 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
         }
     }
 
