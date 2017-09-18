@@ -8,7 +8,7 @@
     tools:context="net.tscloud.kegstatusclient.MainActivity">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/search_bar"
+        android:id="@+id/gauge_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_above="@+id/textViewKegStatus"
@@ -79,14 +79,31 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <Button
-        android:id="@+id/btnGetKegStatus"
-        android:layout_width="105dp"
-        android:layout_height="53dp"
-        android:text="@string/keg_status"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="140dp"
-        android:layout_marginBottom="18dp"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnGetKegStatus"
+            android:layout_width="105dp"
+            android:layout_height="53dp"
+            android:text="@string/keg_status"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="140dp"
+            android:layout_marginBottom="18dp" />
+
+        <Button
+            android:id="@+id/btnDoGraph"
+            android:layout_width="105dp"
+            android:layout_height="53dp"
+            android:text="@string/do_graph"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="140dp"
+            android:layout_marginBottom="18dp" />
+
+    </LinearLayout>
+
 </RelativeLayout>

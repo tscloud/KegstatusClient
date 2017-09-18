@@ -33,8 +33,7 @@ import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 
-public class MainActivity extends AppCompatActivity implements
-        GaugeFragment.OnGaugeFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     // ConfigurationBuilder used by twitter routines
@@ -77,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements
         mTwitterStream = new TwitterStreamFactory(mConfig).getInstance();
 
         final Button btnGetKegStatus = (Button)findViewById(R.id.btnGetKegStatus);
+        final Button btnDoGraph = (Button)findViewById(R.id.btnDoGraph);
+        //TextView not final <- we need reference as a member var
         mTextViewKegStatus = (TextView)findViewById(R.id.textViewKegStatus);
 
         btnGetKegStatus.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +87,16 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        //TEST
+        btnDoGraph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Start up GraphDisplayActivity");
+
+                Intent i = new Intent(this,GraphDisplayActivity.class);
+                startActivity(i);
+            }
+        });
+
         mGaugeViewTemp = (GaugeView) findViewById(R.id.gauge_view_temp);
         mGaugeViewHumidity = (GaugeView) findViewById(R.id.gauge_view_hum);
 
@@ -113,12 +123,6 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "onStop() called -- cleanup TwitterStream");
         // kill twitter stream - no longer read tweets
         new KillTwitterStream().execute();
-    }
-
-    // Needed from Fragment interface
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        Log.d(TAG, "onFragmentInteraction() called");
     }
 
     private void postRequest(String aStatusChange) {
