@@ -109,6 +109,7 @@ public class GraphDisplayActivity extends AppCompatActivity {
 
             int tsDI, tempDI, bmpTempDI, humidityDI;
             String ts, temp, bmpTemp, humidity, pressure;
+            int i = 0;
 
             for (String s : aStringList) {
                 //new DataPoint(new Date(k), in.get(k))
@@ -126,7 +127,17 @@ public class GraphDisplayActivity extends AppCompatActivity {
 
                 Log.d(TAG, "ts: " + ts + "|temp: " + temp+ "|bmpTemp: " + bmpTemp +
                         "|humidity: " + humidity + "|pressure: " + pressure);
+
+                tempPoints[i] = new DataPoint(new Date(ts), temp);
+                humidityPoints[i] = new DataPoint(new Date(ts), bmpTemp);
+                pressurePoints[i] = new DataPoint(new Date(ts), pressure);
+
+                i++;
             }
+
+            mDataPointList.add(tempPoints);
+            mDataPointList.add(humidityPoints);
+            mDataPointList.add(pressurePoints);
         }
 
         @Override
