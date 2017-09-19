@@ -1,6 +1,7 @@
 package net.tscloud.kegstatusclient;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -90,10 +91,8 @@ public class MainActivity extends AppCompatActivity {
         btnDoGraph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Start up GraphDisplayActivity");
-
-                Intent i = new Intent(this,GraphDisplayActivity.class);
-                startActivity(i);
+                // Start the Graph Activity
+                startGraphActivity();
             }
         });
 
@@ -123,6 +122,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onStop() called -- cleanup TwitterStream");
         // kill twitter stream - no longer read tweets
         new KillTwitterStream().execute();
+    }
+
+    private void startGraphActivity() {
+        Log.d(TAG, "Start up GraphDisplayActivity");
+
+        Intent i = new Intent(this, GraphDisplayActivity.class);
+        startActivity(i);
     }
 
     private void postRequest(String aStatusChange) {
