@@ -2,5 +2,8 @@
     <string name="app_name">KegstatusClient</string>
     <string name="keg_status">Get Keg Status</string>
     <string name="do_graph">Display Graphs</string>
+    <string name="temperature">Temperature (F)</string>
+    <string name="humidity">Humidity (%rH)</string>
+    <string name="pressure">Pressure (mbar)</string>
 
 </resources>
